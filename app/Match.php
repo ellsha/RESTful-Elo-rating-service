@@ -14,6 +14,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Match extends Model
 {
+    /**
+     * Disabling timestamps.
+     *
+     * @var bool
+     */
     public $timestamps = false;
 
     /**
@@ -40,7 +45,7 @@ class Match extends Model
     protected $dates = ['started_at', 'finished_at'];
 
     /**
-     * Return the players who took part in this match
+     * Return the players who took part in this match.
      */
     public function players()
     {

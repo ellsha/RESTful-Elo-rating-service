@@ -30,10 +30,8 @@ class UpdateMatchRequest extends FormRequest
     public function rules()
     {
         return [
-            'started_at' => 'required|date_format:Y-m-d H:i:s',
-            'finished_at' => 'required|date_format:Y-m-d H:i:s',
-            'winner_id' => 'required|integer',
-            'players_id' => 'required|array|size:2'
+            'started_at' => 'date_format:Y-m-d H:i:s',
+            'finished_at' => 'date_format:Y-m-d H:i:s',
         ];
     }
 }

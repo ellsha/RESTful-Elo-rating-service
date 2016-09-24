@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Elo\Elo;
-use App\Exceptions\ApiException;
+use App\Exceptions\Exception;
 use App\Http\Requests\CreateMatchRequest;
 use App\Http\Requests\UpdateMatchRequest;
 use App\Http\Requests\IndexMatchRequest;
@@ -41,14 +41,14 @@ class MatchesController extends Controller
      *
      * @param CreateMatchRequest $request
      * @return JsonResponse
-     * @throws ApiException
+     * @throws Exception
      */
     public function store(CreateMatchRequest $request)
     {
         $players = Player::whereIn('id', $request->players_id)->get();
 
         if (count($players) != 2) {
-            throw new ApiException('A player or players with such ids does not exist.');
+            throw new Exception('A player or players with such ids does not exist.');
         }
 
         $this->updatePlayersRating($players, $request->winner_id);
@@ -65,17 +65,17 @@ class MatchesController extends Controller
     }
 
     /**
-     * Set new values for rating players after the match.
+     * Set new values for player's rating after the match.
      *
      * @param $players
      * @param $winner_id
-     * @throws ApiException
+     * @throws Exception
      */
     private function updatePlayersRating($players, $winner_id)
     {
         if ($players[0]->id != $winner_id &&
             $players[1]->id != $winner_id) {
-            throw new ApiException('Winner id is not correct.');
+            throw new Exception('Winner id is not correct.');
         }
 
         $elo = new Elo();
@@ -83,7 +83,7 @@ class MatchesController extends Controller
         if ($players[0]->id == $winner_id) {
             $ratings = $elo->win($players[0], $players[1]);
         } else {
-            $ratings = $elo->win($players[1], $players[0]);
+            $ratings = $elo->lose($players[0], $players[1]);
         }
 
         $players[0]->elo_rating = $ratings[0];
@@ -120,19 +120,13 @@ class MatchesController extends Controller
         if ($request->has('started_at')) {
             $match->started_at = $request->started_at;
         }
+
         if ($request->has('finished_at')) {
             $match->finished_at = $request->finished_at;
         }
-        if ($request->has('winner_id')) {
-            $match->winner_id = $request->winner_id;
-        }
+
         if ($request->has('log')) {
             $match->log = $request->log;
-        }
-        if ($request->has('players_id')) {
-            $players = $request->players_id;
-            $match->players()->detach();
-            $match->players()->attach($players);
         }
 
         $match->save();
@@ -150,6 +144,6 @@ class MatchesController extends Controller
     {
         Match::destroy($id);
 
-        response()->json()->setStatusCode(200, 'OK');
+        return response()->json(null, 204);
     }
 }

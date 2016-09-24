@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
@@ -15,12 +14,12 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        /*\Illuminate\Auth\AuthenticationException::class,
+        \Illuminate\Auth\AuthenticationException::class,
         \Illuminate\Auth\Access\AuthorizationException::class,
         \Symfony\Component\HttpKernel\Exception\HttpException::class,
         \Illuminate\Database\Eloquent\ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
-        \Illuminate\Validation\ValidationException::class,*/
+        \Illuminate\Validation\ValidationException::class,
     ];
 
     /**
@@ -31,7 +30,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Exception $exception)
+    public function report(\Exception $exception)
     {
         parent::report($exception);
     }
@@ -43,27 +42,8 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render($request, \Exception $exception)
     {
-        $debug = config('app.debug');
-
-        if ($debug) {
-            return parent::render($request, $exception);
-        }
-
-        if ($exception instanceof ApiException) {
-            $code = $exception->getCode();
-            $code = $code >= 400 ? $code : 500;
-
-            return response()->json([
-                'error' => $exception->getMessage()
-            ], $code);
-        }
-
-        if($exception instanceof ValidationException) {
-            return response()->json(['error' => $exception->validator->fails()], 422);
-        }
-
         if ($request->is('api/*')) {
             return response()->json(['error' => 'Something went wrong'], 500);
         }

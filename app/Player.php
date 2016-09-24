@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property integer $id
  * @property integer $elo_rating
+ *
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Match[] $matches
  * @mixin \Eloquent
  */

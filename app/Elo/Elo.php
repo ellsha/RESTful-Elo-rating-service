@@ -38,8 +38,7 @@ class Elo
     }
 
     /**
-     *
-     * Calculate the Elo rating if the first player won the second player.
+     * Calculate the Elo rating if the first player won.
      *
      * @see Elo::calculate()
      * @param Player $winner
@@ -50,6 +49,20 @@ class Elo
     public function win(Player $winner, Player $loser)
     {
         return $this->calculate($winner, $loser, 1);
+    }
+
+    /**
+     * Calculate the Elo rating if the first player lose.
+     *
+     * @see Elo::calculate()
+     * @param PlayerInterface $winner
+     * @param PlayerInterface $loser
+     *
+     * @return array
+     */
+    public function lose(Player $winner, Player $loser)
+    {
+        return $this->calculate($winner, $loser, 0);
     }
 
     /**

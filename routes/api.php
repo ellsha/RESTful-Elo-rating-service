@@ -49,7 +49,7 @@ Route::match(
 )->name('matches.update');
 
 /**
- * Delete the information about the match
+ * Delete information about the match
  */
 Route::delete(
     'matches/{match}',

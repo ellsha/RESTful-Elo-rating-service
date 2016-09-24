@@ -7,9 +7,9 @@ use App\Player;
 class PlayersController extends Controller
 {
     /**
-     * Get a list of matches played by a given player
+     * Get a list of matches played by a given player.
      *
-     * @param $id
+     * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function matches($id)
@@ -18,9 +18,9 @@ class PlayersController extends Controller
     }
 
     /**
-     * Get player rating
+     * Get player rating.
      *
-     * @param $id
+     * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function rating($id)
