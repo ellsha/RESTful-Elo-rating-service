@@ -59,7 +59,12 @@ class MatchesController extends Controller
             throw new Exception('The model has not been saved.');
         }
 
-        $this->updatePlayersRating($players[0], $players[1], $request->winner_id);
+        if ($players[0]->id == $request->winner_id) {
+            $this->updatePlayersRating($players[0], $players[1]);
+        } else {
+            $this->updatePlayersRating($players[1], $players[0]);
+        }
+
         $match->players()->attach($players);
 
         return response()->json($match->fresh('players'), Response::HTTP_CREATED);
@@ -70,18 +75,12 @@ class MatchesController extends Controller
      *
      * @param Player $winner
      * @param Player $loser
-     * @param $winner_id
-     * @throws Exception
      */
-    private function updatePlayersRating(Player $winner, Player $loser, $winner_id)
+    private function updatePlayersRating(Player $winner, Player $loser)
     {
         $elo = new Elo();
 
-        if ($winner->id == $winner_id) {
-            $ratings = $elo->win($winner, $loser);
-        } else {
-            $ratings = $elo->lose($winner, $loser);
-        }
+        $ratings = $elo->win($winner, $loser);
 
         $winner->elo_rating = $ratings[0];
         $loser->elo_rating  = $ratings[1];
