@@ -4,6 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property string $started_at
+ * @property string $finished_at
+ * @property integer $winner_id
+ * @property integer[] $players_id
+ * @property string log
+ */
 class CreateMatchRequest extends FormRequest
 {
     /**
@@ -27,7 +34,7 @@ class CreateMatchRequest extends FormRequest
             'started_at' => 'required|date_format:Y-m-d H:i:s',
             'finished_at' => 'required|date_format:Y-m-d H:i:s',
             'winner_id' => 'required|integer',
-            'players_id' => 'required'
+            'players_id' => 'required|array|size:2'
         ];
     }
 }

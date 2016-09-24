@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -32,7 +33,6 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        dd($exception);
         parent::report($exception);
     }
 
@@ -45,6 +45,29 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        $debug = config('app.debug');
+
+        if ($debug) {
+            return parent::render($request, $exception);
+        }
+
+        if ($exception instanceof ApiException) {
+            $code = $exception->getCode();
+            $code = $code >= 400 ? $code : 500;
+
+            return response()->json([
+                'error' => $exception->getMessage()
+            ], $code);
+        }
+
+        if($exception instanceof ValidationException) {
+            return response()->json(['error' => $exception->validator->fails()], 422);
+        }
+
+        if ($request->is('api/*')) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
+
         return parent::render($request, $exception);
     }
 

@@ -5,12 +5,10 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * @property string $started_at
- * @property string $finished_at
- * @property integer $winner_id
- * @property integer[] $players_id
+ * @property string $start start time for searching matches by the started_at time
+ * @property string $end end time for searching matches by the started_at time
  */
-class UpdateMatchRequest extends FormRequest
+class IndexMatchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,10 +28,8 @@ class UpdateMatchRequest extends FormRequest
     public function rules()
     {
         return [
-            'started_at' => 'required|date_format:Y-m-d H:i:s',
-            'finished_at' => 'required|date_format:Y-m-d H:i:s',
-            'winner_id' => 'required|integer',
-            'players_id' => 'required|array|size:2'
+            'start' => 'required_with:end|date_format:Y-m-d H:i:s',
+            'end' => 'required_with:start|date_format:Y-m-d H:i:s',
         ];
     }
 }

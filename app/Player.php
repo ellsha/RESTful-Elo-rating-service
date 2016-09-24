@@ -2,14 +2,24 @@
 
 namespace App;
 
+use App\Elo\PlayerInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * App\Player
+ *
  * @property integer $id
  * @property integer $elo_rating
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Match[] $matches
+ * @mixin \Eloquent
  */
-class Player extends Model
+class Player extends Model implements PlayerInterface
 {
+    /**
+     * Disabling timestamps.
+     *
+     * @var bool
+     */
     public $timestamps = false;
 
     /**
@@ -29,7 +39,7 @@ class Player extends Model
     ];
 
     /**
-     * Get a list of matches played by the player
+     * Get a list of matches played by the player.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -39,12 +49,22 @@ class Player extends Model
     }
 
     /**
-     * Get player elo rating
+     * Elo rating of the player.
      *
      * @return integer
      */
-    public function getEloRatingAttribute()
+    public function getEloRating()
     {
         return $this->attributes['elo_rating'];
+    }
+
+    /**
+     * Number of matches in which the player took part.
+     *
+     * @return integer
+     */
+    public function getMatchesCount()
+    {
+        return $this->matches()->count();
     }
 }

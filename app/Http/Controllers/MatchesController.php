@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Elo\Elo;
+use App\Exceptions\ApiException;
 use App\Http\Requests\CreateMatchRequest;
 use App\Http\Requests\UpdateMatchRequest;
+use App\Http\Requests\IndexMatchRequest;
 use App\Match;
+use App\Player;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class MatchesController extends Controller
 {
     /**
-     * Get a list of matches
+     * Get a list of matches.
      *
-     * @param Request $request
+     * @param IndexMatchRequest $request
      * @return JsonResponse
      */
-    public function index(Request $request)
+    public function index(IndexMatchRequest $request)
     {
         if ($request->has('start') && $request->has('end')) {
             $matches = Match::with('players')
@@ -34,14 +37,21 @@ class MatchesController extends Controller
     }
 
     /**
-     * Save the match result
+     * Save the match result.
      *
      * @param CreateMatchRequest $request
      * @return JsonResponse
+     * @throws ApiException
      */
     public function store(CreateMatchRequest $request)
     {
-        $players_id = ($request->players_id);
+        $players = Player::whereIn('id', $request->players_id)->get();
+
+        if (count($players) != 2) {
+            throw new ApiException('A player or players with such ids does not exist.');
+        }
+
+        $this->updatePlayersRating($players, $request->winner_id);
 
         $match = new Match();
         $match->started_at = $request->started_at;
@@ -49,13 +59,42 @@ class MatchesController extends Controller
         $match->winner_id = $request->winner_id;
         $match->log = $request->log ?: null;
         $match->save();
-        $match->players()->attach($players_id);
+        $match->players()->attach($players);
 
         return response()->json($match->fresh('players'), Response::HTTP_CREATED);
     }
 
     /**
-     * Get information about the match
+     * Set new values for rating players after the match.
+     *
+     * @param $players
+     * @param $winner_id
+     * @throws ApiException
+     */
+    private function updatePlayersRating($players, $winner_id)
+    {
+        if ($players[0]->id != $winner_id &&
+            $players[1]->id != $winner_id) {
+            throw new ApiException('Winner id is not correct.');
+        }
+
+        $elo = new Elo();
+
+        if ($players[0]->id == $winner_id) {
+            $ratings = $elo->win($players[0], $players[1]);
+        } else {
+            $ratings = $elo->win($players[1], $players[0]);
+        }
+
+        $players[0]->elo_rating = $ratings[0];
+        $players[1]->elo_rating = $ratings[1];
+
+        $players[0]->save();
+        $players[1]->save();
+    }
+
+    /**
+     * Get information about the match.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
@@ -68,7 +107,7 @@ class MatchesController extends Controller
     }
 
     /**
-     * Edit match data
+     * Edit match data.
      *
      * @param UpdateMatchRequest $request
      * @param  int $id
@@ -102,7 +141,7 @@ class MatchesController extends Controller
     }
 
     /**
-     * Delete the information about the match
+     * Delete the information about the match.
      *
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
