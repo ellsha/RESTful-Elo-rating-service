@@ -1,27 +1,252 @@
-# Laravel PHP Framework
+## Route list
+```php
++--------+-----------+------------------------------+-----------------+------------------------------------------------+------------+
+| Domain | Method    | URI                          | Name            | Action                                         | Middleware |
++--------+-----------+------------------------------+-----------------+------------------------------------------------+------------+
+|        | GET|HEAD  | api/matches                  | matches.index   | App\Http\Controllers\MatchesController@index   | api        |
+|        | POST      | api/matches                  | matches.store   | App\Http\Controllers\MatchesController@store   | api        |
+|        | DELETE    | api/matches/{match}          | matches.destroy | App\Http\Controllers\MatchesController@destroy | api        |
+|        | PUT|PATCH | api/matches/{match}          | matches.update  | App\Http\Controllers\MatchesController@update  | api        |
+|        | GET|HEAD  | api/matches/{match}          | matches.show    | App\Http\Controllers\MatchesController@show    | api        |
+|        | GET|HEAD  | api/players/{player}         | players.rating  | App\Http\Controllers\PlayersController@rating  | api        |
+|        | GET|HEAD  | api/players/{player}/matches | players.matches | App\Http\Controllers\PlayersController@matches | api        |
++--------+-----------+------------------------------+-----------------+------------------------------------------------+------------+
+```
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+### matches.index
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+Get a list of matches
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+```shell
+$ curl -v GET 'http://127.0.0.1/api/matches'
+```
+```php
+< HTTP/1.1 200 OK
+```
+```json
+[
+  {
+    "id": 4,
+    "started_at": "2000-04-23 18:25:43",
+    "finished_at": "2000-04-30 20:00:00",
+    "winner_id": "3",
+    "log": "some log",
+    "players": [
+      {
+        "id": 1,
+        "elo_rating": "1192",
+        "pivot": {
+          "match_id": "4",
+          "player_id": "1"
+        }
+      },
+      {
+        "id": 3,
+        "elo_rating": "2060",
+        "pivot": {
+          "match_id": "4",
+          "player_id": "3"
+        }
+      }
+    ]
+  },
+  ...
+ ]
+```
 
-## Official Documentation
+### matches.store
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+Save the match result
 
-## Contributing
+```shell
+$ curl -v POST -H "Content-type: application/json" -d '{
+	"started_at":"2010-04-23 18:25:43",
+	"finished_at":"2011-04-24 20:21:32",
+	"players_id":[2,3],
+	"winner_id":2,
+	"log":"some log"
+}' 'http://127.0.0.1/api/matches'
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+```php
+< HTTP/1.1 201 Created
+```
+```json
+{
+  "id": 61,
+  "started_at": "2010-04-23 18:25:43",
+  "finished_at": "2011-04-24 20:21:32",
+  "winner_id": "2",
+  "log": "some log",
+  "players": [
+    {
+      "id": 2,
+      "elo_rating": "1465",
+      "pivot": {
+        "match_id": "61",
+        "player_id": "2"
+      }
+    },
+    {
+      "id": 3,
+      "elo_rating": "1982",
+      "pivot": {
+        "match_id": "61",
+        "player_id": "3"
+      }
+    }
+  ]
+}
+```
 
-## Security Vulnerabilities
+### matches.destroy
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Delete information about the match
 
-## License
+```shell
+$ curl -v DELETE 'http://127.0.0.1/api/matches/61'
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+```php
+< HTTP/1.1 204 No Content
+```
+
+### matches.update
+
+Edit match data
+
+```shell
+$ curl -v PATCH -H "Content-type: application/json" -d '{
+	"started_at":"1990-04-23 10:00:22"
+}' 'http://127.0.0.1/api/matches/40'
+```
+
+```php
+< HTTP/1.1 200 OK
+```
+```json
+{
+  "id": 40,
+  "started_at": "1990-04-23 10:00:22",
+  "finished_at": "2000-04-30 20:00:00",
+  "winner_id": "3",
+  "log": "some log",
+  "players": [
+    {
+      "id": 1,
+      "elo_rating": "1192",
+      "pivot": {
+        "match_id": "4",
+        "player_id": "1"
+      }
+    },
+    {
+      "id": 3,
+      "elo_rating": "1944",
+      "pivot": {
+        "match_id": "4",
+        "player_id": "3"
+      }
+    }
+  ]
+}
+```
+
+### matches.show
+
+Get information about the match
+
+```shell
+curl -v GET 'http://127.0.0.1/api/matches/40'
+```
+
+```php
+< HTTP/1.1 200 OK
+```
+```json
+{
+  "id": 40,
+  "started_at": "1990-04-23 10:00:22",
+  "finished_at": "2091-04-23 18:25:43",
+  "winner_id": "2",
+  "log": null,
+  "players": [
+    {
+      "id": 1,
+      "elo_rating": "1192",
+      "pivot": {
+        "match_id": "40",
+        "player_id": "1"
+      }
+    },
+    {
+      "id": 2,
+      "elo_rating": "1484",
+      "pivot": {
+        "match_id": "40",
+        "player_id": "2"
+      }
+    }
+  ]
+}
+```
+
+### players.rating
+
+Get player's rating
+
+```shell
+$ curl -v GET 'http://127.0.0.1/api/players/1'
+```
+```php
+< HTTP/1.1 200 OK
+```
+```php
+"1192"
+```
+
+### players.matches
+
+Get a list of matches played by a given player
+
+```shell
+curl -v -GET 'http://ellsha.ru/api/players/1/matches'
+```
+
+```php
+< HTTP/1.1 200 OK
+```
+```json
+[
+  {
+    "id": 2,
+    "started_at": "2015-04-23 18:25:43",
+    "finished_at": "2014-04-30 20:00:00",
+    "winner_id": "1",
+    "log": "some log",
+    "pivot": {
+      "player_id": "1",
+      "match_id": "2"
+    },
+    "players": [
+      {
+        "id": 1,
+        "elo_rating": "1192",
+        "pivot": {
+          "match_id": "2",
+          "player_id": "1"
+        }
+      },
+      {
+        "id": 2,
+        "elo_rating": "1484",
+        "pivot": {
+          "match_id": "2",
+          "player_id": "2"
+        }
+      }
+    ]
+  },
+  ...
+]
+```
