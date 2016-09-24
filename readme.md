@@ -13,9 +13,7 @@
 +--------+-----------+------------------------------+-----------------+------------------------------------------------+------------+
 ```
 
-### matches.index
-
-Get a list of matches
+### Get a list of matches
 
 ```shell
 $ curl -v GET 'http://127.0.0.1/api/matches'
@@ -54,9 +52,7 @@ $ curl -v GET 'http://127.0.0.1/api/matches'
  ]
 ```
 
-### matches.store
-
-Save the match result
+### Save the match result
 
 ```shell
 $ curl -v POST -H "Content-type: application/json" -d '{
@@ -99,9 +95,7 @@ $ curl -v POST -H "Content-type: application/json" -d '{
 }
 ```
 
-### matches.destroy
-
-Delete information about the match
+### Delete information about the match
 
 ```shell
 $ curl -v DELETE 'http://127.0.0.1/api/matches/61'
@@ -152,9 +146,7 @@ $ curl -v PATCH -H "Content-type: application/json" -d '{
 }
 ```
 
-### matches.show
-
-Get information about the match
+### Get information about the match
 
 ```shell
 curl -v GET 'http://127.0.0.1/api/matches/40'
@@ -191,9 +183,7 @@ curl -v GET 'http://127.0.0.1/api/matches/40'
 }
 ```
 
-### players.rating
-
-Get player's rating
+### Get player's rating
 
 ```shell
 $ curl -v GET 'http://127.0.0.1/api/players/1'
@@ -205,9 +195,7 @@ $ curl -v GET 'http://127.0.0.1/api/players/1'
 "1192"
 ```
 
-### players.matches
-
-Get a list of matches played by a given player
+### Get a list of matches played by the player
 
 ```shell
 curl -v -GET 'http://ellsha.ru/api/players/1/matches'
