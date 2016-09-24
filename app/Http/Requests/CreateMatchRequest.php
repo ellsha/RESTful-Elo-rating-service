@@ -33,7 +33,7 @@ class CreateMatchRequest extends FormRequest
         return [
             'started_at'  => 'required|date_format:Y-m-d H:i:s',
             'finished_at' => 'required|date_format:Y-m-d H:i:s',
-            'winner_id'   => 'required|integer|in_array:players_id',
+            'winner_id'   => 'required|integer',
             'players_id'  => 'required|array|size:2',
         ];
     }

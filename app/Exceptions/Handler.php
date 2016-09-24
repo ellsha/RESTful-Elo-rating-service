@@ -43,7 +43,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, \Exception $exception)
     {
-        if ($request->is('api/*')) {
+        $debug = (bool) config('app.debug');
+
+        if ($request->is('api/*') && !$debug) {
             return response()->json(['error' => 'Something went wrong'], 500);
         }
 

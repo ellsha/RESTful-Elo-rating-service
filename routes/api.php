@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -35,15 +33,14 @@ Route::match(
  * Save the match result
  */
 Route::post(
-    'matches/',
+    'matches',
     'MatchesController@store'
 )->name('matches.store');
 
 /**
  * Edit match data
  */
-Route::match(
-    ['PUT', 'PATCH'],
+Route::patch(
     'matches/{match}',
     'MatchesController@update'
 )->name('matches.update');

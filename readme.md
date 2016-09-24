@@ -1,16 +1,16 @@
 ## Route list
-```php
-+--------+-----------+------------------------------+-----------------+------------------------------------------------+------------+
-| Domain | Method    | URI                          | Name            | Action                                         | Middleware |
-+--------+-----------+------------------------------+-----------------+------------------------------------------------+------------+
-|        | GET|HEAD  | api/matches                  | matches.index   | App\Http\Controllers\MatchesController@index   | api        |
-|        | POST      | api/matches                  | matches.store   | App\Http\Controllers\MatchesController@store   | api        |
-|        | DELETE    | api/matches/{match}          | matches.destroy | App\Http\Controllers\MatchesController@destroy | api        |
-|        | PUT|PATCH | api/matches/{match}          | matches.update  | App\Http\Controllers\MatchesController@update  | api        |
-|        | GET|HEAD  | api/matches/{match}          | matches.show    | App\Http\Controllers\MatchesController@show    | api        |
-|        | GET|HEAD  | api/players/{player}         | players.rating  | App\Http\Controllers\PlayersController@rating  | api        |
-|        | GET|HEAD  | api/players/{player}/matches | players.matches | App\Http\Controllers\PlayersController@matches | api        |
-+--------+-----------+------------------------------+-----------------+------------------------------------------------+------------+
+```
++----------+------------------------------+-----------------+------------------------------------------------+------------+
+| Method   | URI                          | Name            | Action                                         | Middleware |
++----------+------------------------------+-----------------+------------------------------------------------+------------+
+| GET|HEAD | api/matches                  | matches.index   | App\Http\Controllers\MatchesController@index   | api        |
+| POST     | api/matches                  | matches.store   | App\Http\Controllers\MatchesController@store   | api        |
+| DELETE   | api/matches/{match}          | matches.destroy | App\Http\Controllers\MatchesController@destroy | api        |
+| PATCH    | api/matches/{match}          | matches.update  | App\Http\Controllers\MatchesController@update  | api        |
+| GET|HEAD | api/matches/{match}          | matches.show    | App\Http\Controllers\MatchesController@show    | api        |
+| GET|HEAD | api/players/{player}         | players.rating  | App\Http\Controllers\PlayersController@rating  | api        |
+| GET|HEAD | api/players/{player}/matches | players.matches | App\Http\Controllers\PlayersController@matches | api        |
++----------+------------------------------+-----------------+------------------------------------------------+------------+
 ```
 
 ### Get a list of matches

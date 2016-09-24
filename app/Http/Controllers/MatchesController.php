@@ -42,6 +42,11 @@ class MatchesController extends Controller
      */
     public function store(CreateMatchRequest $request)
     {
+        if ($request->winner_id != $request->players_id[0] &&
+            $request->winner_id != $request->players_id[1]) {
+            throw new Exception('Winner id does not match any id of players.');
+        }
+
         $players = Player::whereIn('id', $request->players_id)->get();
 
         if (count($players) != 2) {
