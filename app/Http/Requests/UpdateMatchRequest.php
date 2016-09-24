@@ -30,7 +30,7 @@ class UpdateMatchRequest extends FormRequest
     public function rules()
     {
         return [
-            'started_at' => 'date_format:Y-m-d H:i:s',
+            'started_at'  => 'date_format:Y-m-d H:i:s',
             'finished_at' => 'date_format:Y-m-d H:i:s',
         ];
     }

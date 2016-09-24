@@ -88,11 +88,11 @@ class Elo
      */
     public function kFactor(Player $player)
     {
-        if($player->getMatchesCount() <= 30) {
+        if ($player->getMatchesCount() <= 30) {
             return 40;
         }
 
-        if($player->getEloRating() < 2400) {
+        if ($player->getEloRating() < 2400) {
             return 20;
         }
 
@@ -109,6 +109,6 @@ class Elo
      */
     private function expectedScore($rating1, $rating2)
     {
-        return 1 / (1 + pow(10, ($rating2 - $rating1) / 400)) ;
+        return 1 / (1 + pow(10, ($rating2 - $rating1) / 400));
     }
 }

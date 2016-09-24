@@ -36,7 +36,7 @@ class Player extends Model implements PlayerInterface
      * @var array
      */
     protected $fillable = [
-        'elo_rating'
+        'elo_rating',
     ];
 
     /**

@@ -105,9 +105,7 @@ $ curl -v DELETE 'http://127.0.0.1/api/matches/61'
 < HTTP/1.1 204 No Content
 ```
 
-### matches.update
-
-Edit match data
+### Edit match data
 
 ```shell
 $ curl -v PATCH -H "Content-type: application/json" -d '{

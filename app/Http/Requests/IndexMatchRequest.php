@@ -29,7 +29,7 @@ class IndexMatchRequest extends FormRequest
     {
         return [
             'start' => 'required_with:end|date_format:Y-m-d H:i:s',
-            'end' => 'required_with:start|date_format:Y-m-d H:i:s',
+            'end'   => 'required_with:start|date_format:Y-m-d H:i:s',
         ];
     }
 }

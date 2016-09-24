@@ -14,7 +14,11 @@ class PlayersController extends Controller
      */
     public function matches($id)
     {
-        return response()->json(Player::find($id)->matches()->with('players')->get());
+        /** @var Player $player */
+        $player  = Player::findOrFail($id);
+        $matches = $player->matches()->with('players')->get();
+
+        return response()->json($matches);
     }
 
     /**
@@ -25,6 +29,9 @@ class PlayersController extends Controller
      */
     public function rating($id)
     {
-        return response()->json(Player::find($id)->elo_rating);
+        /** @var Player $player */
+        $player = Player::findOrFail($id);
+
+        return response()->json($player->elo_rating);
     }
 }

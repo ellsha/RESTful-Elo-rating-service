@@ -34,7 +34,10 @@ class Match extends Model
      * @var array
      */
     protected $fillable = [
-        'started_at', 'finished_at', 'winner_id', 'log'
+        'started_at',
+        'finished_at',
+        'winner_id',
+        'log',
     ];
 
     /**

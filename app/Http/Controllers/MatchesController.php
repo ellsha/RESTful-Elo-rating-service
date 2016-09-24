@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Elo\Elo;
 use App\Exceptions\Exception;
 use App\Http\Requests\CreateMatchRequest;
-use App\Http\Requests\UpdateMatchRequest;
 use App\Http\Requests\IndexMatchRequest;
+use App\Http\Requests\UpdateMatchRequest;
 use App\Match;
 use App\Player;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
@@ -22,18 +23,14 @@ class MatchesController extends Controller
      */
     public function index(IndexMatchRequest $request)
     {
-        if ($request->has('start') && $request->has('end')) {
-            $matches = Match::with('players')
-                ->where('started_at', '>', $request->start)
-                ->where('started_at', '<', $request->end)
-                ->get();
+        $matches = Match::with('players');
 
-            return response()->json($matches);
+        if ($request->has('start') && $request->has('end')) {
+            $matches->where('started_at', '>', $request->start)
+                ->where('started_at', '<', $request->end);
         }
 
-        $matches = Match::with('players')->get();
-
-        return response()->json($matches);
+        return response()->json($matches->get());
     }
 
     /**
@@ -48,17 +45,21 @@ class MatchesController extends Controller
         $players = Player::whereIn('id', $request->players_id)->get();
 
         if (count($players) != 2) {
-            throw new Exception('A player or players with such ids does not exist.');
+            throw new ModelNotFoundException('A player or players with such ids does not exist.');
         }
 
-        $this->updatePlayersRating($players, $request->winner_id);
-
         $match = new Match();
-        $match->started_at = $request->started_at;
+
+        $match->started_at  = $request->started_at;
         $match->finished_at = $request->finished_at;
-        $match->winner_id = $request->winner_id;
-        $match->log = $request->log ?: null;
-        $match->save();
+        $match->winner_id   = $request->winner_id;
+        $match->log         = $request->log ?: null;
+
+        if (!$match->save()) {
+            throw new Exception('The model has not been saved.');
+        }
+
+        $this->updatePlayersRating($players[0], $players[1], $request->winner_id);
         $match->players()->attach($players);
 
         return response()->json($match->fresh('players'), Response::HTTP_CREATED);
@@ -67,36 +68,32 @@ class MatchesController extends Controller
     /**
      * Set new values for player's rating after the match.
      *
-     * @param $players
+     * @param Player $winner
+     * @param Player $loser
      * @param $winner_id
      * @throws Exception
      */
-    private function updatePlayersRating($players, $winner_id)
+    private function updatePlayersRating(Player $winner, Player $loser, $winner_id)
     {
-        if ($players[0]->id != $winner_id &&
-            $players[1]->id != $winner_id) {
-            throw new Exception('Winner id is not correct.');
-        }
-
         $elo = new Elo();
 
-        if ($players[0]->id == $winner_id) {
-            $ratings = $elo->win($players[0], $players[1]);
+        if ($winner->id == $winner_id) {
+            $ratings = $elo->win($winner, $loser);
         } else {
-            $ratings = $elo->lose($players[0], $players[1]);
+            $ratings = $elo->lose($winner, $loser);
         }
 
-        $players[0]->elo_rating = $ratings[0];
-        $players[1]->elo_rating = $ratings[1];
+        $winner->elo_rating = $ratings[0];
+        $loser->elo_rating  = $ratings[1];
 
-        $players[0]->save();
-        $players[1]->save();
+        $winner->save();
+        $loser->save();
     }
 
     /**
      * Get information about the match.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -117,17 +114,9 @@ class MatchesController extends Controller
     {
         $match = Match::findOrFail($id);
 
-        if ($request->has('started_at')) {
-            $match->started_at = $request->started_at;
-        }
-
-        if ($request->has('finished_at')) {
-            $match->finished_at = $request->finished_at;
-        }
-
-        if ($request->has('log')) {
-            $match->log = $request->log;
-        }
+        $match->started_at  = $request->get('started_at', $match->started_at);
+        $match->finished_at = $request->get('finished_at', $match->finished_at);
+        $match->log         = $request->get('log', $match->log);
 
         $match->save();
 
@@ -137,7 +126,7 @@ class MatchesController extends Controller
     /**
      * Delete the information about the match.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)

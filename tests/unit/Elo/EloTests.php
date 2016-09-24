@@ -14,10 +14,12 @@ class EloTests extends TestCase
     public function testSmallRatingIntervalAndFewMatchesCount()
     {
         $player1 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
         $player2 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
 
         $player1->method('getEloRating')->will($this->returnValue(1500));
@@ -26,7 +28,7 @@ class EloTests extends TestCase
         $player2->method('getEloRating')->will($this->returnValue(1700));
         $player2->method('getMatchesCount')->will($this->returnValue(5));
 
-        $elo = new Elo();
+        $elo     = new Elo();
         $ratings = $elo->win($player1, $player2);
 
         $this->assertEquals(1530, $ratings[0]);
@@ -40,10 +42,12 @@ class EloTests extends TestCase
     public function testMiddleRatingIntervalAndFewMatchesCount()
     {
         $player1 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
         $player2 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
 
         $player1->method('getEloRating')->will($this->returnValue(1500));
@@ -53,7 +57,7 @@ class EloTests extends TestCase
         $player2->method('getMatchesCount')->will($this->returnValue(5));
 
 
-        $elo = new Elo();
+        $elo     = new Elo();
         $ratings = $elo->win($player1, $player2);
 
         $this->assertEquals(1539, $ratings[0]);
@@ -67,10 +71,12 @@ class EloTests extends TestCase
     public function testLargeRatingIntervalAndFewMatchesCount()
     {
         $player1 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
         $player2 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
 
         $player1->method('getEloRating')->will($this->returnValue(2500));
@@ -80,7 +86,7 @@ class EloTests extends TestCase
         $player2->method('getMatchesCount')->will($this->returnValue(5));
 
 
-        $elo = new Elo();
+        $elo     = new Elo();
         $ratings = $elo->win($player1, $player2);
 
         $this->assertEquals(2540, $ratings[0]);
@@ -94,10 +100,12 @@ class EloTests extends TestCase
     public function testSmallRatingIntervalAndManyMatchesCount()
     {
         $player1 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
         $player2 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
 
         $player1->method('getEloRating')->will($this->returnValue(1500));
@@ -106,7 +114,7 @@ class EloTests extends TestCase
         $player2->method('getEloRating')->will($this->returnValue(1700));
         $player2->method('getMatchesCount')->will($this->returnValue(50));
 
-        $elo = new Elo();
+        $elo     = new Elo();
         $ratings = $elo->win($player1, $player2);
 
         $this->assertEquals(1515, $ratings[0]);
@@ -120,10 +128,12 @@ class EloTests extends TestCase
     public function testMiddleRatingIntervalAndManyMatchesCount()
     {
         $player1 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
         $player2 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
 
         $player1->method('getEloRating')->will($this->returnValue(1500));
@@ -132,7 +142,7 @@ class EloTests extends TestCase
         $player2->method('getEloRating')->will($this->returnValue(2100));
         $player2->method('getMatchesCount')->will($this->returnValue(50));
 
-        $elo = new Elo();
+        $elo     = new Elo();
         $ratings = $elo->win($player1, $player2);
 
         $this->assertEquals(1519, $ratings[0]);
@@ -146,10 +156,12 @@ class EloTests extends TestCase
     public function testLargeRatingIntervalAndManyMatchesCount()
     {
         $player1 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
         $player2 = $this->getMockBuilder(Player::class)->setMethods([
-            'getEloRating', 'getMatchesCount'
+            'getEloRating',
+            'getMatchesCount',
         ])->getMock();
 
         $player1->method('getEloRating')->will($this->returnValue(2500));
@@ -158,7 +170,7 @@ class EloTests extends TestCase
         $player2->method('getEloRating')->will($this->returnValue(3700));
         $player2->method('getMatchesCount')->will($this->returnValue(50));
 
-        $elo = new Elo();
+        $elo     = new Elo();
         $ratings = $elo->win($player1, $player2);
 
         $this->assertEquals(2510, $ratings[0]);

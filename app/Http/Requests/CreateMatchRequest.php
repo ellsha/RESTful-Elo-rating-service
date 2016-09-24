@@ -31,10 +31,10 @@ class CreateMatchRequest extends FormRequest
     public function rules()
     {
         return [
-            'started_at' => 'required|date_format:Y-m-d H:i:s',
+            'started_at'  => 'required|date_format:Y-m-d H:i:s',
             'finished_at' => 'required|date_format:Y-m-d H:i:s',
-            'winner_id' => 'required|integer',
-            'players_id' => 'required|array|size:2'
+            'winner_id'   => 'required|integer|in_array:players_id',
+            'players_id'  => 'required|array|size:2',
         ];
     }
 }
