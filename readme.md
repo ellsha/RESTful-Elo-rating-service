@@ -196,7 +196,7 @@ $ curl -v GET 'http://127.0.0.1/api/players/1'
 ### Get a list of matches played by the player
 
 ```shell
-curl -v -GET 'http://ellsha.ru/api/players/1/matches'
+curl -v -GET 'http://127.0.0.1/api/players/1/matches'
 ```
 
 ```php
