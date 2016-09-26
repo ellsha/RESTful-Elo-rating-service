@@ -16,7 +16,7 @@
 ### Get a list of matches
 
 ```shell
-$ curl -v GET 'http://127.0.0.1/api/matches'
+$ curl -v -XGET 'http://127.0.0.1/api/matches'
 ```
 ```php
 < HTTP/1.1 200 OK
@@ -55,7 +55,7 @@ $ curl -v GET 'http://127.0.0.1/api/matches'
 ### Save the match result
 
 ```shell
-$ curl -v POST -H "Content-type: application/json" -d '{
+$ curl -v -XPOST -H "Content-type: application/json" -d '{
 	"started_at":"2010-04-23 18:25:43",
 	"finished_at":"2011-04-24 20:21:32",
 	"players_id":[2,3],
@@ -98,7 +98,7 @@ $ curl -v POST -H "Content-type: application/json" -d '{
 ### Delete information about the match
 
 ```shell
-$ curl -v DELETE 'http://127.0.0.1/api/matches/61'
+$ curl -v -XDELETE 'http://127.0.0.1/api/matches/61'
 ```
 
 ```php
@@ -108,7 +108,7 @@ $ curl -v DELETE 'http://127.0.0.1/api/matches/61'
 ### Edit match data
 
 ```shell
-$ curl -v PATCH -H "Content-type: application/json" -d '{
+$ curl -v -XPATCH -H "Content-type: application/json" -d '{
 	"started_at":"1990-04-23 10:00:22"
 }' 'http://127.0.0.1/api/matches/40'
 ```
@@ -147,7 +147,7 @@ $ curl -v PATCH -H "Content-type: application/json" -d '{
 ### Get information about the match
 
 ```shell
-curl -v GET 'http://127.0.0.1/api/matches/40'
+curl -v -XGET 'http://127.0.0.1/api/matches/40'
 ```
 
 ```php
@@ -184,7 +184,7 @@ curl -v GET 'http://127.0.0.1/api/matches/40'
 ### Get player's rating
 
 ```shell
-$ curl -v GET 'http://127.0.0.1/api/players/1'
+$ curl -v -XGET 'http://127.0.0.1/api/players/1'
 ```
 ```php
 < HTTP/1.1 200 OK
@@ -196,7 +196,7 @@ $ curl -v GET 'http://127.0.0.1/api/players/1'
 ### Get a list of matches played by the player
 
 ```shell
-curl -v -GET 'http://127.0.0.1/api/players/1/matches'
+curl -v -XGET 'http://127.0.0.1/api/players/1/matches'
 ```
 
 ```php
